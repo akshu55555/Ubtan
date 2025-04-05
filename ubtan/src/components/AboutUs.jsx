@@ -1,10 +1,10 @@
 import React from 'react';
 import './AboutUs.css';
 import useScrollAnimation from '../hooks/useScrollAnimation';
-import TeamMember1 from '../assets/team1.jpg';
-import TeamMember2 from '../assets/team2.jpg';
-import TeamMember3 from '../assets/team3.jpg';
-import TeamMember4 from '../assets/team4.jpg';
+import TeamMember1 from '../assets/team1.jpeg';
+import TeamMember2 from '../assets/team2.jpeg';
+import TeamMember3 from '../assets/team3.jpeg';
+import TeamMember4 from '../assets/team4.jpeg';
 
 function AboutUs() {
   useScrollAnimation();
@@ -24,15 +24,15 @@ function AboutUs() {
     },
     {
       id: 3,
-      name: "Bhavika Panpalia",
+      name: "Kanak Dagade",
       image: TeamMember3,
-      description: "bhavikapanpalia@gmail.com"
+      description: "kanakdagade@gmail.com"
     },
     {
       id: 4,
-      name: "Kanak Dagade",
+      name: "Bhavika Panpalia",
       image: TeamMember4,
-      description: "kanakdagade@gmail.com"
+      description: "bhavikapanpalia@gmail.com"
     }
   ];
 
