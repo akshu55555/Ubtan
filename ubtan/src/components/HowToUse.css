@@ -1,0 +1,28 @@
+.how-to-use-section {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 3rem 2rem;
+  /* No background color - let the app gradient show through */
+  /* No box shadow */
+  /* No border radius */
+}
+
+.section-title {
+  font-size: 2rem;
+  color: #fff;
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.steps-list {
+  list-style-type: disc;
+  padding-left: 2rem;
+}
+
+.step-item {
+  color: #fff;
+  font-size: 1.2rem;
+  margin-bottom: 1rem;
+  line-height: 1.6;
+}

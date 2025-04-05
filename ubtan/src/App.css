@@ -1,0 +1,30 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Poppins', sans-serif;
+  scroll-behavior: smooth;
+}
+
+body, html {
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+}
+
+.app {
+  min-height: 100vh;
+  background: linear-gradient(to bottom, rgb(165, 100, 13), rgb(112, 135, 10));
+  background-attachment: fixed; /* This keeps the gradient consistent */
+  overflow-x: hidden;
+}
+
+.content {
+  width: 100%;
+  /* No padding here, to avoid creating "boxes" */
+}
+
+/* Remove all borders between sections */
+.content > * {
+  border: none;
+}
