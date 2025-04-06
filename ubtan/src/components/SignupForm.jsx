@@ -6,13 +6,13 @@ function SignupForm({ onBackClick, navigateToLogin }) {
     e.preventDefault();
     
     const formData = {
-      firstName: e.target.firstName.value,
-      lastName: e.target.lastName.value,
+      first_name: e.target.firstName.value,
+      last_name: e.target.lastName.value,
       contact: e.target.contact.value,
       address: e.target.address.value
     };
 
-    fetch('http://localhost:5003/signup', {
+    fetch('http://localhost:5000/signup', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'

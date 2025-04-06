@@ -7,10 +7,11 @@ function LoginForm({ onBackClick }) {
     
     const formData = {
       id: e.target.id.value,
-      name: e.target.name.value
+      first_name: e.target.first_name.value
     };
+    
 
-    fetch('http://localhost:5003/login', {
+    fetch('http://localhost:5000/login', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -44,7 +45,7 @@ function LoginForm({ onBackClick }) {
         </div>
         <div className="form-field">
           <label htmlFor="name">Name</label>
-          <input type="text" id="name" name="name" placeholder="Enter your name" required />
+          <input type="text" id="first_name" name="first_name" placeholder="Enter your name" required />
         </div>
         <div className="form-buttons">
           <button type="button" className="back-btn" onClick={onBackClick}>Back</button>
