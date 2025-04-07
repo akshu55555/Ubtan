@@ -1,7 +1,7 @@
 import React from 'react';
 import './SignupForm.css'; // Reusing the same styles
 
-function LoginForm({ onBackClick }) {
+function LoginForm({ onBackClick, onLoginSuccess }) {
   const handleSubmit = (e) => {
     e.preventDefault();
     
@@ -10,7 +10,6 @@ function LoginForm({ onBackClick }) {
       first_name: e.target.first_name.value
     };
     
-
     fetch('http://localhost:5000/login', {
       method: 'POST',
       headers: {
@@ -25,9 +24,13 @@ function LoginForm({ onBackClick }) {
       throw new Error('Network response was not ok');
     })
     .then(data => {
+      // ✅ Store token in localStorage
+      localStorage.setItem('token', data.token);
+
       alert('Login successful!');
       e.target.reset();
-      onBackClick();
+      // Call the onLoginSuccess function to navigate to the products page
+      onLoginSuccess();
     })
     .catch(error => {
       console.error('Error:', error);

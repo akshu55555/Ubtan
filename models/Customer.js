@@ -7,7 +7,7 @@ const customer=(sequelize)=>{
 
             type:DataTypes.INTEGER,
             autoIncrement : true,
-            primaryKey:true,
+            primaryKey:true,    
         },
         first_name:{
             type:DataTypes.STRING,
@@ -25,7 +25,9 @@ const customer=(sequelize)=>{
             
         },
  }  ,{ 
-    timestamps: true  
+    timestamps: true,
+    tableName: 'customers', // Force this exact table name
+    freezeTableName: true   // Prevent Sequelize from pluralizing
   })
 }
 export default customer;

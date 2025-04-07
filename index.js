@@ -3,11 +3,15 @@ import jsonwebtoken from 'jsonwebtoken';
 import sequelize from './db.js';
 import signup from './controllers/signupcontroller.js';
 import login from './controllers/logincontroller.js';
+import search from './controllers/searchcontroller.js';
+import cart from './controllers/cartcontroller.js';
+import getcart from './controllers/getcartcontroller.js';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
 const app=express();
 const PORT=5000;
-
+import dotenv from 'dotenv';
+dotenv.config();
 app.use(cookieParser());
 app.use(express.json({strict:false}));
 app.use(express.json());
@@ -35,4 +39,7 @@ sequelize
 
 app.use('/signup',signup);
 app.use('/login',login);
+app.use('/search',search);
+app.use('/cart',cart);
+app.use('/getcart',getcart);
  
