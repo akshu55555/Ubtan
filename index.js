@@ -6,6 +6,7 @@ import login from './controllers/logincontroller.js';
 import search from './controllers/searchcontroller.js';
 import cart from './controllers/cartcontroller.js';
 import getcart from './controllers/getcartcontroller.js';
+import suggestions from './controllers/suggestionscontroller.js';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
 const app=express();
@@ -42,4 +43,5 @@ app.use('/login',login);
 app.use('/search',search);
 app.use('/cart',cart);
 app.use('/getcart',getcart);
+app.use('/suggestions',suggestions);
  

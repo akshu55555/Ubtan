@@ -1,242 +1,235 @@
-import React, { useState, useEffect } from 'react';
-import './ShoppingCart.css';
+import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
+import axios from 'axios';
+import { toast } from 'react-toastify';
 
-function ShoppingCart() {
-  const [cartItems, setCartItems] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
+const ShoppingCart = () => {
+  const [cart, setCart] = useState([]);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [debug, setDebug] = useState({ rawData: null, parsedFields: [] });
 
   useEffect(() => {
-    // Fetch cart items when component mounts
-    fetchCartItems();
+    const token = localStorage.getItem('token');
+    if (token) {
+      setIsLoggedIn(true);
+      fetchCart(token);
+    } else {
+      setLoading(false);
+    }
   }, []);
 
-  const fetchCartItems = () => {
-    setIsLoading(true);
-    // Get the token from localStorage or wherever you store it
-    const token = localStorage.getItem('token');
-    
-    fetch('http://localhost:5000/getcart', {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`
-      }
-    })
-    .then(response => {
-      console.log("Response status:", response.status);
-      if (response.ok) {
-        return response.json();
-      }
-      return response.text().then(text => {
-        console.log("Error response:", text);
-        throw new Error(`Failed to fetch cart items: ${text}`);
+  const fetchCart = async (token) => {
+    setLoading(true);
+    setError(null);
+    try {
+      // Updated URL to match your backend routing - using port 5000 instead of 3000
+      // and /getcart instead of /cart/getcart
+      const response = await axios.get('http://localhost:5000/getcart', {
+        headers: {
+          Authorization: `Bearer ${token}`
+        },
+        timeout: 10000 // 10 second timeout
       });
-    })
-    .then(data => {
-      console.log("Raw cart data received:", JSON.stringify(data));
       
-      // Store raw data for debugging
-      setDebug(prevDebug => ({
-        ...prevDebug,
-        rawData: data
-      }));
+      console.log("Cart response received:", response.data);
+      setCart(response.data);
+      setLoading(false);
+    } catch (error) {
+      console.error('Error fetching cart:', error);
       
-      // Check if data is an array
-      if (Array.isArray(data)) {
-        // Extract available fields from first item for debugging
-        if (data.length > 0) {
-          const sampleItem = data[0];
-          setDebug(prevDebug => ({
-            ...prevDebug,
-            parsedFields: Object.keys(sampleItem).map(key => `${key}: ${JSON.stringify(sampleItem[key])}`)
-          }));
-        }
+      // Handle specific error types
+      if (error.response) {
+        // The request was made and the server responded with a status code
+        // that falls out of the range of 2xx
+        console.log("Error data:", error.response.data);
+        console.log("Error status:", error.response.status);
         
-        setCartItems(data);
+        if (error.response.status === 401 || error.response.status === 402) {
+          // Token issues
+          localStorage.removeItem('token');
+          setIsLoggedIn(false);
+          setError("Session expired. Please login again.");
+        } else {
+          setError(`Server error: ${error.response.status}`);
+        }
+      } else if (error.request) {
+        // The request was made but no response was received
+        console.log("No response received:", error.request);
+        setError("Network error. Please check your connection and try again.");
       } else {
-        // If data is not an array, check if it has a specific property that might contain the cart items
-        const possibleArrayProps = ['items', 'cartItems', 'products', 'data'];
-        for (const prop of possibleArrayProps) {
-          if (data && data[prop] && Array.isArray(data[prop])) {
-            console.log(`Found cart items in data.${prop}:`, data[prop]);
-            setCartItems(data[prop]);
-            return;
+        // Something happened in setting up the request that triggered an Error
+        setError(`Request error: ${error.message}`);
+      }
+      
+      setLoading(false);
+    }
+  };
+
+  const removeFromCart = async (id) => {
+    try {
+      const token = localStorage.getItem('token');
+      // Also update these URLs to use port 5000
+      await axios.delete(`http://localhost:5000/cart/remove/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+      
+      // Update cart state after successful removal
+      setCart(cart.filter(item => item.id !== id));
+      toast.success('Item removed from cart');
+    } catch (error) {
+      console.error('Error removing item from cart:', error);
+      toast.error('Failed to remove item from cart');
+    }
+  };
+
+  const updateQuantity = async (id, newQuantity) => {
+    if (newQuantity < 1) return;
+    
+    try {
+      const token = localStorage.getItem('token');
+      // Also update these URLs to use port 5000
+      await axios.put(`http://localhost:5000/cart/update/${id}`, 
+        { quantity: newQuantity },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`
           }
         }
-        
-        console.error("Unexpected data format:", data);
-        setError("Received data in unexpected format");
-      }
-      
-      setIsLoading(false);
-    })
-    .catch(error => {
-      console.error('Error fetching cart:', error);
-      setError(error.message);
-      setIsLoading(false);
-    });
-  };
-
-  const handleQuantityChange = (itemId, newQuantity) => {
-    const token = localStorage.getItem('token');
-    
-    fetch('http://localhost:5000/update-cart', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`
-      },
-      body: JSON.stringify({
-        productId: itemId,
-        quantity: newQuantity
-      })
-    })
-    .then(response => {
-      if (response.ok) {
-        return response.json();
-      }
-      throw new Error('Failed to update cart');
-    })
-    .then(() => {
-      // Update local state to reflect change
-      setCartItems(prevItems => 
-        prevItems.map(item => 
-          (item.id === itemId || item.prod_id === itemId) ? {...item, quantity: newQuantity} : item
-        )
       );
-    })
-    .catch(error => {
-      console.error('Error updating cart:', error);
-      alert('Failed to update cart. Please try again.');
-    });
+      
+      // Update cart state after successful update
+      setCart(cart.map(item => 
+        item.id === id ? { ...item, quantity: newQuantity } : item
+      ));
+    } catch (error) {
+      console.error('Error updating quantity:', error);
+      toast.error('Failed to update quantity');
+    }
   };
 
-  const handleRemoveItem = (itemId) => {
-    const token = localStorage.getItem('token');
-    
-    fetch('http://localhost:5000/remove-from-cart', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`
-      },
-      body: JSON.stringify({
-        productId: itemId
-      })
-    })
-    .then(response => {
-      if (response.ok) {
-        return response.json();
-      }
-      throw new Error('Failed to remove item');
-    })
-    .then(() => {
-      // Remove item from local state
-      setCartItems(prevItems => prevItems.filter(item => item.id !== itemId && item.prod_id !== itemId));
-    })
-    .catch(error => {
-      console.error('Error removing item:', error);
-      alert('Failed to remove item. Please try again.');
-    });
-  };
+  if (loading) {
+    return (
+      <div className="container mx-auto p-4">
+        <div className="bg-white p-6 rounded-lg shadow-md">
+          <h2 className="text-xl font-semibold mb-4">Shopping Cart</h2>
+          <p>Loading cart items...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="container mx-auto p-4">
+        <div className="bg-white p-6 rounded-lg shadow-md">
+          <h2 className="text-xl font-semibold mb-4">Shopping Cart</h2>
+          <p className="text-red-500">Error: {error}</p>
+          <button 
+            onClick={() => {
+              const token = localStorage.getItem('token');
+              if (token) fetchCart(token);
+            }}
+            className="mt-2 px-4 py-2 bg-yellow-800 text-white rounded hover:bg-yellow-700"
+          >
+            Try Again
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  if (!isLoggedIn) {
+    return (
+      <div className="container mx-auto p-4">
+        <div className="bg-white p-6 rounded-lg shadow-md">
+          <h2 className="text-xl font-semibold mb-4">Shopping Cart</h2>
+          <p>Please log in to view your cart.</p>
+          <Link to="/login" className="text-blue-500 hover:underline">Go to Login</Link>
+        </div>
+      </div>
+    );
+  }
+
+  if (cart.length === 0) {
+    return (
+      <div className="container mx-auto p-4">
+        <div className="bg-white p-6 rounded-lg shadow-md">
+          <h2 className="text-xl font-semibold mb-4">Shopping Cart</h2>
+          <p>Your cart is empty.</p>
+          <Link to="/products" className="text-blue-500 hover:underline">Continue Shopping</Link>
+        </div>
+      </div>
+    );
+  }
 
   const calculateTotal = () => {
-    return cartItems.reduce((total, item) => {
-      // Use net_price instead of price if available
-      const price = parseFloat(item.net_price || item.price || item.product_price || 0);
-      const quantity = parseInt(item.quantity || item.quant || 1);
-      return total + (price * quantity);
-    }, 0).toFixed(2);
+    return cart.reduce((total, item) => total + (item.price * item.quantity), 0);
   };
-
-  // Get product name properly
-  const getProductName = (item) => {
-    // Try to fetch product name from product data or other known fields
-    return item.p_name || item.name || item.name || "Unknown Product";
-  };
-
-  // Get product ID properly
-  const getProductId = (item) => {
-    return item.id || item.prod_id || item.product_id || "unknown";
-  };
-
-  // Get product price properly
-  const getProductPrice = (item) => {
-    return item.net_price || item.price || item.product_price || 0;
-  };
-
-  // Get product quantity properly
-  const getProductQuantity = (item) => {
-    return item.quantity || item.quant || 1;
-  };
-
-  if (isLoading) return <div className="cart-loading">Loading your cart...</div>;
-  if (error) return <div className="cart-error">Error: {error}</div>;
 
   return (
-    <div className="shopping-cart">
-      <h1>Your Shopping Cart</h1>
-      
-      {/* Log Cart Items button */}
-      <button 
-        onClick={() => console.log("Current cart items:", cartItems)}
-        className="log-cart-btn"
-      >
-        Cart Items
-      </button>
-      
-      {cartItems.length === 0 ? (
-        <div className="empty-cart">
-          <p>Your cart is empty</p>
-        </div>
-      ) : (
-        <div>
-          <div className="cart-contents">
-            {cartItems.map((item, index) => (
-              <div key={getProductId(item) || index} className="cart-item">
-                <div className="item-image">
-                  <img src={item.imageUrl || item.image_url || '/api/placeholder/100/100'} alt="Product" />
-                </div>
-                <div className="item-details">
-                  <h3>{getProductName(item)}</h3>
-                  <p className="item-price">₹{getProductPrice(item)}</p>
-                  <small className="debug-info">Item ID: {item.prod_id || item.id || item.cart_id || '35'}</small>
-                </div>
-                <div className="item-actions">
-                  <div className="quantity-control">
-                    <select 
-                      value={getProductQuantity(item)}
-                      onChange={(e) => handleQuantityChange(getProductId(item), parseInt(e.target.value))}
-                    >
-                      {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(num => (
-                        <option key={num} value={num}>{num}</option>
-                      ))}
-                    </select>
-                  </div>
-                  <button 
-                    className="remove-item-btn"
-                    onClick={() => handleRemoveItem(getProductId(item))}
-                  >
-                    Remove
-                  </button>
-                </div>
+    <div className="container mx-auto p-4">
+      <div className="bg-white p-6 rounded-lg shadow-md">
+        <h2 className="text-xl font-semibold mb-4">Shopping Cart</h2>
+        
+        <div className="space-y-4">
+          {cart.map((item) => (
+            <div key={item.id} className="flex justify-between items-center border-b pb-4">
+              <div className="flex-1">
+                <p className="font-medium">{item.Product ? item.Product.name : 'Unknown Product'}</p>
+                <p className="text-gray-600">Price: ${item.price}</p>
               </div>
-            ))}
-            
-            <div className="cart-summary">
-              <div className="cart-total">
-                <span>Total:</span>
-                <span className="total-amount">₹{calculateTotal()}</span>
+              
+              <div className="flex items-center space-x-2">
+                <button 
+                  onClick={() => updateQuantity(item.id, item.quantity - 1)}
+                  className="px-2 py-1 bg-gray-200 rounded"
+                >
+                  -
+                </button>
+                <span>{item.quantity}</span>
+                <button 
+                  onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                  className="px-2 py-1 bg-gray-200 rounded"
+                >
+                  +
+                </button>
               </div>
-              <button className="checkout-btn">Proceed to Checkout</button>
+              
+              <div className="ml-4">
+                <p className="font-medium">${(item.price * item.quantity).toFixed(2)}</p>
+              </div>
+              
+              <button 
+                onClick={() => removeFromCart(item.id)}
+                className="ml-4 text-red-500 hover:text-red-700"
+              >
+                Remove
+              </button>
             </div>
-          </div>
+          ))}
         </div>
-      )}
+        
+        <div className="mt-6 text-right">
+          <p className="text-xl font-semibold">Total: ${calculateTotal().toFixed(2)}</p>
+        </div>
+        
+        <div className="mt-6 flex justify-between">
+          <Link to="/products" className="text-blue-500 hover:underline">
+            Continue Shopping
+          </Link>
+          <Link 
+            to="/checkout" 
+            className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600"
+          >
+            Proceed to Checkout
+          </Link>
+        </div>
+      </div>
     </div>
   );
-}
+};
 
 export default ShoppingCart;
