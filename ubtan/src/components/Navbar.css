@@ -2,36 +2,145 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background-color: #080165; /* Dark blue navbar */
-  padding: 1rem 2rem;
+  padding: 1.2rem 3rem;
   position: sticky;
   top: 0;
   z-index: 100;
-  background: transparent; /* key part! */
+  background: rgba(255, 252, 242, 0.85); /* Slightly transparent light background */
+  backdrop-filter: blur(8px);
+  box-shadow: 0 2px 15px rgba(139, 69, 19, 0.1);
+  transition: all 0.3s ease;
+}
+
+.navbar.scrolled {
+  padding: 0.8rem 3rem;
+  background: rgba(255, 252, 242, 0.95);
+  box-shadow: 0 4px 20px rgba(139, 69, 19, 0.15);
 }
 
 .logo {
-  color: white;
-  font-size: 1.8rem;
+  color: #8B4513; /* Rich brown for logo */
+  font-size: 2rem;
   font-family: 'Poppins', sans-serif;
   font-weight: 700;
   letter-spacing: 1px;
+  position: relative;
+  padding-bottom: 5px;
+}
+
+.logo::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 70%;
+  height: 2px;
+  background: linear-gradient(90deg, #8B4513, transparent);
 }
 
 .nav-links {
   display: flex;
-  gap: 2rem;
+  gap: 2.5rem;
+  align-items: center;
 }
 
 .nav-item {
-  color: white;
+  color: #5D4037; /* Deep brown for nav links */
   text-decoration: none;
-  font-weight: bold;
+  font-weight: 600;
   font-family: 'Poppins', sans-serif;
+  font-size: 1.1rem;
   transition: all 0.3s ease;
+  position: relative;
+  padding: 8px 0;
+}
+
+.nav-item::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: #D4A76A; /* Golden accent color */
+  transition: width 0.3s ease;
 }
 
 .nav-item:hover {
-  text-decoration: underline;
+  color: #8B4513; /* Darker on hover */
   transform: translateY(-2px);
+}
+
+.nav-item:hover::after {
+  width: 100%;
+}
+
+.nav-item.active {
+  color: #8B4513;
+  font-weight: 700;
+}
+
+.nav-item.active::after {
+  width: 100%;
+  background: #8B4513;
+}
+
+/* Button styling for a CTA in navbar if needed */
+.nav-cta {
+  background: linear-gradient(135deg, #D4A76A, #8B4513);
+  color: white;
+  padding: 0.6rem 1.5rem;
+  border-radius: 50px;
+  font-weight: 600;
+  font-size: 1rem;
+  box-shadow: 0 4px 12px rgba(139, 69, 19, 0.2);
+}
+
+.nav-cta:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 15px rgba(139, 69, 19, 0.3);
+}
+
+.nav-cta::after {
+  display: none;
+}
+
+/* Mobile menu button - add to your HTML if needed */
+.menu-button {
+  display: none;
+  background: none;
+  border: none;
+  color: #8B4513;
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+
+@media (max-width: 768px) {
+  .navbar {
+    padding: 1rem 1.5rem;
+  }
+
+  .nav-links {
+    position: fixed;
+    top: 0;
+    right: -100%;
+    height: 100vh;
+    width: 70%;
+    max-width: 300px;
+    background: rgba(255, 252, 242, 0.98);
+    flex-direction: column;
+    padding: 5rem 2rem;
+    gap: 2rem;
+    box-shadow: -5px 0 25px rgba(0, 0, 0, 0.1);
+    transition: right 0.4s ease;
+  }
+
+  .nav-links.active {
+    right: 0;
+  }
+
+  .menu-button {
+    display: block;
+    z-index: 101;
+  }
 }

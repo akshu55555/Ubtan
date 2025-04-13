@@ -1,71 +1,225 @@
 .about-us-section {
   width: 100%;
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 3rem 2rem;
+  max-width: 1100px;
+  margin: 4rem auto;
+  padding: 2rem 1.5rem;
+  background: linear-gradient(135deg, #FFFAF0, #F5E9D3);
+  border-radius: 15px;
+  box-shadow: 0 10px 25px rgba(139, 69, 19, 0.05);
+}
+
+
+/* Natural texture overlay */
+.about-us-section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url('/api/placeholder/400/400'); /* Replace with natural texture */
+  opacity: 0.05;
+  z-index: 0;
+}
+
+/* Top decorative accent */
+.about-us-section::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 5px;
+  background: linear-gradient(90deg, #D4A76A, #8B4513, #D4A76A);
 }
 
 .section-title {
-  font-size: 2rem;
-  color: #fff;
-  margin-bottom: 2rem;
+  font-size: 2.8rem;
+  color: #8B4513; /* Rich brown */
+  margin-bottom: 3rem;
   text-align: center;
+  font-weight: 700;
+  position: relative;
+  z-index: 1;
+}
+
+.section-title::after {
+  content: '';
+  position: absolute;
+  bottom: -12px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80px;
+  height: 3px;
+  background: linear-gradient(90deg, #D4A76A, #8B4513);
 }
 
 .team-container {
   display: flex;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  gap: 2rem;
+  flex-direction: row;
+  gap: 1.5rem;
+  overflow-x: auto;
+  padding-bottom: 1rem;
+
 }
 
+
 .team-member {
-  flex: 1 1 220px;
-  padding: 1.5rem;
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 15px;
+  padding: 2rem;
   text-align: center;
-  transition: all 0.3s ease;
-  /* No background color - let the app gradient show through */
-  /* No border radius */
-  /* No box shadow */
+  transition: all 0.4s ease;
+  position: relative;
+  overflow: hidden;
+  flex: 0 0 250px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+}
+
+.team-member::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 5px;
+  background: linear-gradient(90deg, #D4A76A, #8B4513);
+  z-index: 1;
+}
+
+.team-member::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 40%;
+  background: linear-gradient(to top, rgba(250, 240, 230, 0.2), transparent);
+  z-index: 0;
 }
 
 .team-member:hover {
-  transform: translateY(-5px);
+  transform: translateY(-10px);
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
 }
 
 .member-photo {
-  width: 150px;
-  height: 150px;
+  width: 160px;
+  height: 160px;
   border-radius: 50%;
   object-fit: cover;
-  margin-bottom: 1rem;
-  border: 3px solid #fff;
+  margin: 0 auto 1.5rem;
+  border: 4px solid white;
+  box-shadow: 0 5px 15px rgba(139, 69, 19, 0.2);
+  transition: all 0.3s ease;
+  position: relative;
+  z-index: 2;
+}
+
+.team-member:hover .member-photo {
+  transform: scale(1.05);
+  border-color: #D4A76A;
 }
 
 .member-name {
-  color: #fff;
-  font-size: 1.3rem;
-  margin-bottom: 0.5rem;
+  color: #8B4513; /* Rich brown */
+  font-size: 1.5rem;
+  margin-bottom: 0.75rem;
+  font-weight: 600;
+  position: relative;
+  z-index: 2;
 }
 
 .member-role {
-  color: #f1c40f;
-  font-size: 1rem;
-  margin-bottom: 0.5rem;
+  color: #D4A76A; /* Golden accent */
+  font-size: 1.1rem;
+  margin-bottom: 1rem;
+  font-weight: 500;
+  position: relative;
+  z-index: 2;
 }
 
 .member-description {
-  color: #f1c40f;
-  font-size: 0.9rem;
+  color: #5D4037; /* Deep brown */
+  font-size: 1rem;
+  line-height: 1.6;
+  position: relative;
+  z-index: 2;
+}
+
+/* Decorative elements */
+.leaf-decoration {
+  position: absolute;
+  opacity: 0.1;
+  z-index: 0;
+  font-size: 5rem;
+  color: #8B4513;
+}
+
+.leaf-decoration-1 {
+  top: 10%;
+  left: 5%;
+  transform: rotate(-15deg);
+}
+
+.leaf-decoration-2 {
+  bottom: 10%;
+  right: 5%;
+  transform: rotate(20deg);
+}
+
+@media (max-width: 992px) {
+  .section-title {
+    font-size: 2.4rem;
+  }
 }
 
 @media (max-width: 768px) {
-  .team-container {
-    flex-direction: column;
-    align-items: center;
+  .section-title {
+    font-size: 2rem;
   }
   
-  .team-member {
-    max-width: 300px;
+  .team-container {
+    grid-template-columns: repeat(2, 1fr);
   }
+  
+  .leaf-decoration {
+    display: none;
+  }
+}
+
+@media (max-width: 576px) {
+  .team-container {
+    grid-template-columns: 1fr;
+    max-width: 320px;
+    margin: 0 auto;
+  }
+}
+/* Hide scrollbar but keep scrolling */
+.team-container {
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none;  /* Internet Explorer 10+ */
+}
+
+.team-container::-webkit-scrollbar {
+  display: none; /* Chrome, Safari and Opera */
+}
+.member-email {
+  font-size: 0.9rem; /* or try 0.85rem */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: block; /* or inline-block if needed */
+}
+.member-email {
+  font-size: 0.45rem;
+  color: #5D4037;
+  word-break: break-word;
+  text-align: center;
+  display: block;
+  margin-top: 0.25rem;
+}
+.team-member {
+  padding: 2rem 1rem; /* reduce side padding if needed */
+  max-width: 250px; /* you can increase to 270px or 280px */
 }

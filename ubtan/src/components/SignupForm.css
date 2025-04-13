@@ -1,80 +1,101 @@
 .signup-form-container {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    background: linear-gradient(to bottom, rgb(165, 100, 13), rgb(112, 135, 10));
-    color: white;
-    padding: 2rem;
-    z-index: 100;
-  }
-  
-  .signup-form-container h1 {
-    font-size: 2.5rem;
-    margin-bottom: 2rem;
-  }
-  
-  .signup-form-container form {
-    width: 100%;
-    max-width: 500px;
-  }
-  
-  .form-field {
-    margin-bottom: 1.5rem;
-    text-align: left;
-  }
-  
-  .form-field label {
-    display: block;
-    margin-bottom: 0.5rem;
-    font-size: 1.1rem;
-  }
-  
-  .form-field input {
-    width: 100%;
-    padding: 10px;
-    font-size: 1rem;
-    background-color: rgba(255, 255, 255, 0.2);
-    border: none;
-    border-bottom: 2px solid white;
-    color: white;
-    outline: none;
-  }
-  
-  .form-field input::placeholder {
-    color: rgba(255, 255, 255, 0.7);
-  }
-  
-  .form-buttons {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 2rem;
-  }
-  
-  button {
-    background-color: white;
-    color: rgb(165, 100, 13);
-    border: none;
-    padding: 12px 24px;
-    font-size: 1.2rem;
-    border-radius: 30px;
-    cursor: pointer;
-    font-weight: bold;
-    transition: all 0.3s ease;
-  }
-  
-  button:hover {
-    transform: scale(1.05);
-    box-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
-  }
-  
-  .back-btn {
-    background-color: transparent;
-    border: 2px solid white;
-    color: white;
-  }
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(to bottom, #f7f3e9, #d0e8c1);
+  color: #3a4a3d; /* Earthy dark green for text */
+  padding: 2rem;
+  z-index: 100;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.signup-form-container h1 {
+  font-size: 2.5rem;
+  margin-bottom: 2rem;
+  color: #2c3e2f; /* Darker green for heading */
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+}
+
+.signup-form-container form {
+  width: 100%;
+  max-width: 500px;
+  background-color: rgba(255, 255, 255, 0.8);
+  padding: 2.5rem;
+  border-radius: 15px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+.form-field {
+  margin-bottom: 1.5rem;
+  text-align: left;
+}
+
+.form-field label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-size: 1.1rem;
+  color: #4a5c4f; /* Medium green for labels */
+  font-weight: 500;
+}
+
+.form-field input {
+  width: 100%;
+  padding: 12px 15px;
+  font-size: 1rem;
+  background-color: rgba(255, 255, 255, 0.9);
+  border: 1px solid #d0e8c1;
+  border-radius: 8px;
+  color: #2c3e2f;
+  outline: none;
+  transition: all 0.3s ease;
+}
+
+.form-field input:focus {
+  border-color: #8bb580;
+  box-shadow: 0 0 0 3px rgba(139, 181, 128, 0.2);
+}
+
+.form-field input::placeholder {
+  color: #a8b8aa; /* Light green-gray for placeholder */
+}
+
+.form-buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 2rem;
+  gap: 1rem; /* Adds space between buttons */
+}
+
+button {
+  flex: 1;
+  background-color: #6b8e4e; /* Natural green */
+  color: white;
+  border: none;
+  padding: 14px 24px;
+  font-size: 1.1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(107, 142, 78, 0.4);
+}
+
+.back-btn {
+  background-color: transparent;
+  border: 2px solid #6b8e4e;
+  color: #6b8e4e;
+}
+
+.back-btn:hover {
+  background-color: rgba(107, 142, 78, 0.1);
+}

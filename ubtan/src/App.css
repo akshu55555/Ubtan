@@ -14,8 +14,8 @@ body, html {
 
 .app {
   min-height: 100vh;
-  background: linear-gradient(to bottom, rgb(165, 100, 13), rgb(112, 135, 10));
-  background-attachment: fixed; /* This keeps the gradient consistent */
+  background: linear-gradient(to bottom, #f7f3e9, #d0e8c1); /* warm cream to soft herbal green */
+  background-attachment: fixed;
   overflow-x: hidden;
 }
 

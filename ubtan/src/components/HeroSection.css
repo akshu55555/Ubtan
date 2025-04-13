@@ -3,11 +3,42 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  min-height: 80vh;
+  min-height: 90vh;
   width: 100%;
   position: relative;
   margin-top: 0;
   padding: 3rem 2rem;
+  background-color: #FFF8E7; /* Warm cream background */
+  overflow: hidden;
+}
+
+.hero-section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 90%;
+  background: 
+    linear-gradient(rgba(255, 248, 231, 0.9), rgba(255, 248, 231, 0.9)), /* cream overlay */
+    url('C:\Users\Bhavika\OneDrive\Desktop\ubtan\Ubtan\ubtan\src\assets\ubtan.jpg') center/cover ;
+  background-blend-mode: lighten;
+  /* background-image: cover; */
+  opacity: 0.9; /* adjust for how subtle you want it */
+  z-index: 0;
+   /* optional: softens the image for subtlety */
+}
+
+
+/* Add decorative elements */
+.hero-section::after {
+  content: '✿';
+  position: absolute;
+  bottom: 10%;
+  right: 10%;
+  font-size: 8rem;
+  color: rgba(193, 122, 15, 0.1);
+  z-index: 0;
 }
 
 .hero-overlay {
@@ -19,35 +50,89 @@
   max-width: 1200px;
   text-align: center;
   padding: 2rem;
+  position: relative;
+  z-index: 1;
+}
+
+/* Add another decorative element */
+.hero-overlay::before {
+  content: '✿';
+  position: absolute;
+  top: 10%;
+  left: 10%;
+  font-size: 6rem;
+  color: rgba(193, 122, 15, 0.1);
+  z-index: -1;
 }
 
 .main-heading {
-  font-size: 8rem; /* Increased size */
-  font-family: 'Poppins', sans-serif; /* Explicitly set to Poppins */
+  font-size: 7rem; 
+  font-family: 'Poppins', sans-serif;
   font-style: italic;
-  font-weight: 800; /* Bolder */
-  color: #8B4513;
+  font-weight: 800;
+  color: #4A2511; /* Warm brown color */
   margin-bottom: 1rem;
-  text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.3);
-  letter-spacing: 2px; /* Add some letter spacing */
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+  letter-spacing: 2px;
+  position: relative;
+  display: inline-block;
+}
+
+/* Add an underline effect */
+.main-heading::after {
+  content: '';
+  position: absolute;
+  bottom: -10px;
+  left: 10%;
+  width: 80%;
+  height: 3px;
+  background: linear-gradient(90deg, transparent, #C17A0F, transparent);
 }
 
 .tagline {
   font-size: 2rem;
   font-family: 'Poppins', sans-serif;
   font-style: italic;
-  font-weight: 300; /* Lighter weight for contrast */
-  color: #fff;
+  font-weight: 300;
+  color: #6D4C41; /* Softer brown for text */
   margin-bottom: 2rem;
-  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+  max-width: 800px;
+  line-height: 1.4;
+}
+
+/* Add a button styling if you have one in your JSX */
+.hero-button {
+  display: inline-block;
+  padding: 1rem 2.5rem;
+  background: linear-gradient(135deg, #E2B66B, #C17A0F);
+  color: #fff;
+  font-size: 1.2rem;
+  font-weight: 600;
+  border-radius: 50px;
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(193, 122, 15, 0.3);
+  margin-top: 1rem;
+}
+
+.hero-button:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 7px 20px rgba(193, 122, 15, 0.4);
 }
 
 @media (max-width: 768px) {
   .main-heading {
-    font-size: 5rem;
+    font-size: 4.5rem;
   }
   
   .tagline {
     font-size: 1.6rem;
+  }
+  
+  .hero-section::after,
+  .hero-overlay::before {
+    display: none;
   }
 }

@@ -1,28 +1,127 @@
 .how-to-use-section {
   width: 100%;
   max-width: 1200px;
-  margin: 0 auto;
+  margin: 4rem auto;
   padding: 3rem 2rem;
-  /* No background color - let the app gradient show through */
-  /* No box shadow */
-  /* No border radius */
+  position: relative;
+  background-color: #FFF8E7; /* Warm cream background */
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+/* Add a subtle background pattern */
+.how-to-use-section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: url('/api/placeholder/400/400') top right/30% no-repeat; /* Replace with subtle Ubtan texture */
+  opacity: 0.05;
+  border-radius: 20px;
+  z-index: 0;
 }
 
 .section-title {
-  font-size: 2rem;
-  color: #fff;
-  margin-bottom: 2rem;
+  font-size: 2.5rem;
+  color: #4A2511; /* Warm brown color */
+  margin-bottom: 2.5rem;
   text-align: center;
+  font-weight: 700;
+  position: relative;
+  z-index: 1;
+}
+
+/* Add decorative underline */
+.section-title::after {
+  content: '';
+  position: absolute;
+  bottom: -12px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80px;
+  height: 3px;
+  background: linear-gradient(90deg, #E2B66B, #C17A0F);
 }
 
 .steps-list {
-  list-style-type: disc;
-  padding-left: 2rem;
+  list-style-type: none;
+  counter-reset: step-counter;
+  padding-left: 0;
+  position: relative;
+  z-index: 1;
 }
 
 .step-item {
-  color: #fff;
+  color: #6D4C41; /* Softer brown for text */
   font-size: 1.2rem;
-  margin-bottom: 1rem;
+  margin-bottom: 1.5rem;
   line-height: 1.6;
+  padding: 1.2rem 1.2rem 1.2rem 65px;
+  position: relative;
+  background-color: rgba(255, 255, 255, 0.7);
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
+}
+
+/* Create numbered steps */
+.step-item::before {
+  content: counter(step-counter);
+  counter-increment: step-counter;
+  position: absolute;
+  left: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 40px;
+  height: 40px;
+  background: linear-gradient(135deg, #E2B66B, #C17A0F);
+  color: #fff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 1.2rem;
+  box-shadow: 0 4px 10px rgba(193, 122, 15, 0.3);
+}
+
+.step-item:hover {
+  transform: translateX(10px);
+  background-color: rgba(255, 255, 255, 0.9);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+}
+
+/* Add decorative elements */
+.how-to-use-section::after {
+  content: '✿';
+  position: absolute;
+  bottom: 10%;
+  right: 5%;
+  font-size: 5rem;
+  color: rgba(193, 122, 15, 0.1);
+  z-index: 0;
+}
+
+@media (max-width: 768px) {
+  .section-title {
+    font-size: 2rem;
+  }
+  
+  .step-item {
+    font-size: 1.1rem;
+    padding: 1rem 1rem 1rem 60px;
+  }
+  
+  .step-item::before {
+    width: 35px;
+    height: 35px;
+    font-size: 1.1rem;
+    left: 12px;
+  }
+  
+  .how-to-use-section::after {
+    display: none;
+  }
 }
