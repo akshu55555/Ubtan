@@ -1,4 +1,4 @@
-import { ProductModel } from "../db.js";
+import { ProductModel } from "../../db.js";
 import { Op } from "sequelize";
 const suggestions=async(req,res)=>{
         const{p_name}=req.body;
