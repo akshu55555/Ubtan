@@ -1,71 +1,78 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Search, ShoppingCart } from 'lucide-react';
 import './ProductSearch.css'; // Ensure you have this CSS file
+
+// Import your static images - adjust paths as needed
+import ubtanFacePackImg from '../assets/ubtan.jpg'; // Adjust path if needed
+// Import other product images as needed
 
 function ProductSearch({ onCartClick, onHomeClick }) {
   const [searchTerm, setSearchTerm] = useState('');
   const [searchResults, setSearchResults] = useState([]);
-  const [suggestions, setSuggestions] = useState([]);
-  const [isSuggestionOpen, setIsSuggestionOpen] = useState(false);
-  const [featuredProducts, setFeaturedProducts] = useState([
-    { id: 1, name: 'Ubtan Face Pack', description: 'Natural turmeric and gram flour face pack for glowing skin.', price: 299, imageUrl: '/api/placeholder/150/150' },
-    { id: 2, name: 'Herbal Hair Oil', description: 'Ayurvedic blend of herbs for strong and shiny hair.', price: 349, imageUrl: '/api/placeholder/150/150' },
-    { id: 3, name: 'Ubtan Body Scrub', description: 'Exfoliating body scrub with natural ingredients.', price: 399, imageUrl: '/api/placeholder/150/150' }
-  ]);
+  const [featuredProducts, setFeaturedProducts] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
-  const searchInputRef = useRef(null);
+  // Image mapping function - maps backend paths to imported images
+  const getImageForProduct = (product) => {
+    // This is a simple mapping - you might need to adjust based on your specific needs
+    if (product.image && product.image.includes('ubtan.jpg')) {
+      return ubtanFacePackImg;
+    }
+    // Add more mappings as needed
 
-  const debounce = (func, delay) => {
-    let timeoutId;
-    return (...args) => {
-      clearTimeout(timeoutId);
-      timeoutId = setTimeout(() => func(...args), delay);
-    };
+    // Default placeholder if no matching image
+    return '/api/placeholder/150/150';
   };
 
-  const fetchSuggestions = async (query) => {
-    if (!query.trim()) {
-      setSuggestions([]);
-      setIsSuggestionOpen(false);
-      return;
-    }
+  // Fetch featured products when component mounts
+  useEffect(() => {
+    fetchFeaturedProducts();
+  }, []);
+
+  const fetchFeaturedProducts = async () => {
+    setIsLoading(true);
     try {
-      const response = await fetch('http://localhost:5000/suggestions', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ p_name: query })
+      const token = localStorage.getItem('token') || sessionStorage.getItem('token');
+      const response = await fetch('http://localhost:5000/featured-products', {
+        headers: token ? { 'Authorization': `Bearer ${token}` } : {}
       });
+
       if (response.ok) {
         const data = await response.json();
-        setSuggestions(data);
-        setIsSuggestionOpen(data.length > 0);
+        setFeaturedProducts(data);
       } else {
-        console.error('Error fetching suggestions');
-        setSuggestions([]);
-        setIsSuggestionOpen(false);
+        console.error('Error fetching featured products');
+        // Fallback to default products if API fails
+        setFeaturedProducts([
+          { id: 1, name: 'Ubtan Face Pack', description: 'Natural turmeric and gram flour face pack for glowing skin.', price: 299, dom: '2025-04-16' },
+          { id: 2, name: 'Herbal Hair Oil', description: 'Ayurvedic blend of herbs for strong and shiny hair.', price: 349, dom: '2025-06-16' },
+          { id: 3, name: 'Ubtan Oil Scrub', description: 'Exfoliating body scrub with natural ingredients.', price: 399, dom: '2025-05-12' }
+        ]);
       }
     } catch (error) {
-      console.error('Error fetching suggestions:', error);
-      setSuggestions([]);
-      setIsSuggestionOpen(false);
+      console.error('Error fetching featured products:', error);
+      // Fallback to default products if API fails
+      setFeaturedProducts([
+        { id: 1, name: 'Ubtan Face Pack', description: 'Natural turmeric and gram flour face pack for glowing skin.', price: 299, dom: '2025-04-16' },
+        { id: 2, name: 'Herbal Hair Oil', description: 'Ayurvedic blend of herbs for strong and shiny hair.', price: 349, dom: '2025-06-16' },
+        { id: 3, name: 'Ubtan Oil Scrub', description: 'Exfoliating body scrub with natural ingredients.', price: 399, dom: '2025-05-12' }
+      ]);
+    } finally {
+      setIsLoading(false);
     }
   };
 
-  const debouncedFetchSuggestions = useRef(debounce(fetchSuggestions, 300)).current;
-
   useEffect(() => {
-    debouncedFetchSuggestions(searchTerm);
-  }, [searchTerm, debouncedFetchSuggestions]);
+    performSearch(searchTerm);
+  }, [searchTerm]);
 
   const handleInputChange = (e) => {
     setSearchTerm(e.target.value);
-    setSearchResults([]); // Clear previous search results when typing
   };
 
   const handleSearch = (e) => {
     e.preventDefault();
-    performSearch(searchTerm);
-    setIsSuggestionOpen(false); // Close suggestions on submit
+    // performSearch is already called on searchTerm change
   };
 
   const performSearch = async (query) => {
@@ -82,14 +89,20 @@ function ProductSearch({ onCartClick, onHomeClick }) {
       if (response.ok) {
         const data = await response.json();
         console.log("Search response:", data);
-        const formattedProduct = { id: data.id || data.prod_id, name: data.item, description: data.description, price: data.price, imageUrl: '/api/placeholder/150/150', dom: data.dom };
-        console.log("Formatted product:", formattedProduct);
-        setSearchResults([formattedProduct]);
-        setSuggestions([]);
-        setIsSuggestionOpen(false);
-        if (searchInputRef.current) {
-          searchInputRef.current.blur();
-        }
+        // Ensure data is always an array for mapping
+        const resultsArray = Array.isArray(data) ? data : (data ? [data] : []);
+        const formattedResults = resultsArray.map(item => ({
+          id: item.id || item.prod_id,
+          name: item.item || item.p_name,
+          description: item.description,
+          price: item.price||  item.p_price,
+          image: item.image || '/frontend/src/assets/ubtan.jpg',
+          dom: item.dom
+        }));
+        setSearchResults(formattedResults);
+      } else if (response.status === 404) {
+        setSearchResults([]);
+        // Optionally display a "No products found" message
       } else if (response.status === 402) {
         setSearchResults([]);
         alert('Product not available!!');
@@ -99,26 +112,7 @@ function ProductSearch({ onCartClick, onHomeClick }) {
     } catch (error) {
       console.error('Error:', error);
       setSearchResults([]);
-      alert('Product not found or error searching. Please try again.');
-    }
-  };
-
-  const handleSuggestionClick = (suggestion) => {
-    setSearchTerm(suggestion);
-    performSearch(suggestion);
-    setIsSuggestionOpen(false); // Close suggestions after clicking
-  };
-
-  const handleBlur = () => {
-    // Delay closing suggestions to allow clicks
-    setTimeout(() => {
-      setIsSuggestionOpen(false);
-    }, 100);
-  };
-
-  const handleFocus = () => {
-    if (suggestions.length > 0 && searchTerm.trim() !== '') {
-      setIsSuggestionOpen(true);
+      // Optionally display an error message
     }
   };
 
@@ -136,19 +130,37 @@ function ProductSearch({ onCartClick, onHomeClick }) {
 
   const handleAddToCart = async (product, quantity) => {
     const token = localStorage.getItem('token') || sessionStorage.getItem('token');
-    if (!token) { alert("You must be logged in to add items to cart!"); return; }
+    if (!token) {
+      alert("You must be logged in to add items to cart!");
+      return;
+    }
+
     const currentDate = formatDate(new Date());
     const deliveryDate = calculateDeliveryDate();
     const discount = generateRandomDiscount();
-    const finalPrice = (product.price * quantity * (100 - discount) / 100).toFixed(2);
-    const cartData = { prod_id: product.id, quant: quantity, doo: currentDate, dod: deliveryDate, discount: discount, net_price: finalPrice };
+    const finalPrice = (product.p_price * quantity * (100 - discount) / 100).toFixed(2);
+
+    const cartData = {
+      prod_id: product.id,
+      quant: quantity,
+      doo: currentDate,
+      dod: deliveryDate,
+      discount: discount,
+      net_price: finalPrice
+    };
+
     console.log("Sending cart data:", cartData);
+
     try {
       const response = await fetch('http://localhost:5000/cart', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
         body: JSON.stringify(cartData)
       });
+
       if (response.ok) {
         const data = await response.json();
         console.log("Cart response:", data);
@@ -162,14 +174,19 @@ function ProductSearch({ onCartClick, onHomeClick }) {
     }
   };
 
+  const handleProductClick = (productId) => {
+    // performSearch is already triggered by searchTerm change
+  };
+
   const ProductCard = ({ product }) => {
     const [quantity, setQuantity] = useState(1);
+
     return (
       <div className="product-card">
-        <div className="product-image">
-          <img src={product.imageUrl || '/api/placeholder/150/150'} alt={product.name} />
+        <div className="product-image" onClick={() => handleProductClick(product.id)}>
+          <img src={getImageForProduct(product)} alt={product.name} />
         </div>
-        <div className="product-details">
+        <div className="product-details" onClick={() => handleProductClick(product.id)}>
           <h3>{product.name}</h3>
           <p className="product-id">ID: {product.id}</p>
           <p>{product.description}</p>
@@ -179,11 +196,26 @@ function ProductSearch({ onCartClick, onHomeClick }) {
         <div className="product-actions">
           <div className="quantity-selector">
             <label htmlFor={`quantity-${product.id}`}>Qty:</label>
-            <select id={`quantity-${product.id}`} value={quantity} onChange={(e) => { const newQuantity = parseInt(e.target.value); setQuantity(newQuantity); handleQuantityChange(product.id, newQuantity); }}>
-              {[1, 2, 3, 4, 5].map(num => <option key={num} value={num}>{num}</option>)}
+            <select
+              id={`quantity-${product.id}`}
+              value={quantity}
+              onChange={(e) => {
+                const newQuantity = parseInt(e.target.value);
+                setQuantity(newQuantity);
+                handleQuantityChange(product.id, newQuantity);
+              }}
+            >
+              {[1, 2, 3, 4, 5].map(num => (
+                <option key={num} value={num}>{num}</option>
+              ))}
             </select>
           </div>
-          <button className="add-to-cart-btn" onClick={() => handleAddToCart(product, quantity)}>Add to Cart</button>
+          <button
+            className="add-to-cart-btn"
+            onClick={() => handleAddToCart(product, quantity)}
+          >
+            Add to Cart
+          </button>
         </div>
       </div>
     );
@@ -195,28 +227,16 @@ function ProductSearch({ onCartClick, onHomeClick }) {
         <form onSubmit={handleSearch}>
           <div className="search-bar">
             <input
-              ref={searchInputRef}
               type="text"
               placeholder="Search for products..."
               value={searchTerm}
               onChange={handleInputChange}
-              onBlur={handleBlur}
-              onFocus={handleFocus}
             />
             <button type="submit" className="search-button">
               <Search size={20} />
             </button>
           </div>
         </form>
-        {isSuggestionOpen && suggestions.length > 0 && (
-          <ul className="suggestions-list">
-            {suggestions.map((suggestion, index) => (
-              <li key={index} onClick={() => handleSuggestionClick(suggestion)}>
-                {suggestion}
-              </li>
-            ))}
-          </ul>
-        )}
       </div>
 
       {searchResults.length > 0 && (
@@ -230,14 +250,24 @@ function ProductSearch({ onCartClick, onHomeClick }) {
         </div>
       )}
 
-      {searchResults.length === 0 && !isSuggestionOpen && (
+      {searchResults.length === 0 && searchTerm.trim() === '' && (
         <div className="featured-products">
           <h2>Featured Products</h2>
-          <div className="products-container">
-            {featuredProducts.map(product => (
-              <ProductCard key={product.id} product={product} />
-            ))}
-          </div>
+          {isLoading ? (
+            <div className="loading">Loading featured products...</div>
+          ) : (
+            <div className="products-container">
+              {featuredProducts.map(product => (
+                <ProductCard key={product.id} product={product} />
+              ))}
+            </div>
+          )}
+        </div>
+      )}
+
+      {searchResults.length === 0 && searchTerm.trim() !== '' && !isLoading && (
+        <div className="no-results">
+          <p>No products found matching "{searchTerm}"</p>
         </div>
       )}
 

@@ -27,7 +27,7 @@ const product=(sequelize)=>{
             type:DataTypes.STRING,
         }
      },{ 
-        timestamps: false,
+        timestamps: true,
         tableName: 'products', // Force this exact table name
         freezeTableName: true   // Prevent Sequelize from pluralizing
       })

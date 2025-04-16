@@ -8,6 +8,7 @@ import cart from './controllers/cartcontroller.js';
 import getcart from './controllers/getcartcontroller.js';
 import suggestions from './controllers/suggestionscontroller.js';
 import cookieParser from 'cookie-parser';
+import featured from './controllers/featuredcontroller.js';
 import cors from 'cors';
 const app=express();
 const PORT=5000;
@@ -44,4 +45,4 @@ app.use('/search',search);
 app.use('/cart',cart);
 app.use('/getcart',getcart);
 app.use('/suggestions',suggestions);
- 
+app.use('/featured-products',featured);
