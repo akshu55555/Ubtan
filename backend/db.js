@@ -1,7 +1,7 @@
 import { Sequelize } from "sequelize";
-import customer from './backend/models/Customer.js';
-import product from "./backend/models/Product.js";
-import cart from "./backend/models/Cart.js";
+import customer from './models/Customer.js';
+import product from "./models/Product.js";
+import cart from "./models/Cart.js";
 
 
 const { DB_HOST, DB_USER, DB_PASS, DB_NAME } = process.env;
