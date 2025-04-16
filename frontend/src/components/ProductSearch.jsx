@@ -138,7 +138,7 @@ function ProductSearch({ onCartClick, onHomeClick }) {
     const currentDate = formatDate(new Date());
     const deliveryDate = calculateDeliveryDate();
     const discount = generateRandomDiscount();
-    const finalPrice = (product.p_price * quantity * (100 - discount) / 100).toFixed(2);
+    const finalPrice = (product.price * quantity * (100 - discount) / 100).toFixed(2);
 
     const cartData = {
       prod_id: product.id,

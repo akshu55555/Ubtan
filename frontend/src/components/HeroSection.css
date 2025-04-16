@@ -21,7 +21,7 @@
   height: 90%;
   background: 
     linear-gradient(rgba(255, 248, 231, 0.9), rgba(255, 248, 231, 0.9)), /* cream overlay */
-    url('C:\Users\Bhavika\OneDrive\Desktop\ubtan\Ubtan\ubtan\src\assets\ubtan.jpg') center/cover ;
+    url('C:\Users\shilpa\OneDrive\Desktop\Ubtan\frontend\src\assets\ubtan.jpg') center/cover ;
   background-blend-mode: lighten;
   /* background-image: cover; */
   opacity: 0.9; /* adjust for how subtle you want it */
