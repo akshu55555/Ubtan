@@ -1,15 +1,16 @@
 // frontend/src/components/ShoppingCart.jsx
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
 import axios from 'axios';
 import { toast } from 'react-toastify';
-import './ShoppingCart.css'; // Import the CSS file
+import { FaCheckCircle } from 'react-icons/fa'; // ✅ Green tick icon
+import './ShoppingCart.css';
 
 const ShoppingCart = () => {
   const [cart, setCart] = useState([]);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [showPaymentSuccess, setShowPaymentSuccess] = useState(false);
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -29,8 +30,6 @@ const ShoppingCart = () => {
         headers: { Authorization: `Bearer ${token}` },
         timeout: 10000
       });
-
-      console.log("Full cart response:", response.data);
       setCart(response.data);
       setLoading(false);
     } catch (error) {
@@ -62,7 +61,7 @@ const ShoppingCart = () => {
       const token = localStorage.getItem('token');
       await axios.put(
         `http://localhost:5000/cart/update/${cartId}`,
-        { quant: newQuantity }, // Match backend expected field name
+        { quant: newQuantity },
         { headers: { Authorization: `Bearer ${token}` } }
       );
 
@@ -75,6 +74,17 @@ const ShoppingCart = () => {
     }
   };
 
+  const handleCheckout = () => {
+    // Optional: Save payment details to backend here
+    setShowPaymentSuccess(true);
+  };
+
+  const handleClosePopup = () => {
+    setShowPaymentSuccess(false);
+    setCart([]); // Clear cart after successful payment
+    window.location.href = '/ProductSearch'; 
+  };
+
   if (loading) {
     return <div className="loading-cart">Loading your cart...</div>;
   }
@@ -84,11 +94,19 @@ const ShoppingCart = () => {
   }
 
   if (!isLoggedIn) {
-    return <div className="not-logged-in-cart">Please log in to view your cart. <Link to="/login">Login</Link></div>;
+    return (
+      <div className="not-logged-in-cart">
+        Please log in to view your cart. <a href="/login">Login</a>
+      </div>
+    );
   }
 
   if (cart.length === 0) {
-    return <div className="empty-cart">Your cart is empty. <Link to="/products">Browse Products</Link></div>;
+    return (
+      <div className="empty-cart">
+        Your cart is empty. <a href="/products">Browse Products</a>
+      </div>
+    );
   }
 
   return (
@@ -98,7 +116,7 @@ const ShoppingCart = () => {
         {cart.map((item) => (
           <div key={item.cart_id || item.id} className="cart-item">
             <div className="item-details">
-              <div className="item-image-placeholder">Image</div> {/* Placeholder for Product Image */}
+              <div className="item-image-placeholder">Image</div>
               <div className="item-info">
                 <p className="item-name">{item.Product?.name || 'Unknown Product'}</p>
                 <p className="item-price">Price: ${item.Product?.p_price || 0}</p>
@@ -110,13 +128,9 @@ const ShoppingCart = () => {
               <button onClick={() => updateQuantity(item.cart_id || item.id, (item.quant || item.quantity) + 1)}>+</button>
             </div>
             <div className="item-actions">
-            <p className="item-subtotal">
-    Subtotal: ${
-        ((item.Product?.p_price || 0) * 
-        (item.quant || item.quantity || 1))
-        .toFixed(2)
-    }
-</p>
+              <p className="item-subtotal">
+                Subtotal: ${(item.Product?.p_price * (item.quant || item.quantity || 1)).toFixed(2)}
+              </p>
               <button className="remove-button" onClick={() => removeFromCart(item.cart_id || item.id)}>Remove</button>
             </div>
           </div>
@@ -124,8 +138,19 @@ const ShoppingCart = () => {
       </div>
       <div className="cart-summary">
         <p className="cart-total">Total: ${cart.reduce((sum, item) => sum + (item.Product?.p_price * (item.quant || item.quantity)), 0).toFixed(2) || 0}</p>
-        <button className="checkout-button">Proceed to Checkout</button>
+        <button className="checkout-button" onClick={handleCheckout}>Proceed to Checkout</button>
       </div>
+
+      {/* ✅ Payment Success Popup */}
+      {showPaymentSuccess && (
+        <div className="payment-popup-overlay">
+          <div className="payment-popup">
+            <FaCheckCircle className="payment-success-icon" />
+            <h3>Payment Done Successfully</h3>
+            <button className="done-button" onClick={handleClosePopup}>Done</button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

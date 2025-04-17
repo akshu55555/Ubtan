@@ -19,7 +19,7 @@ function App() {
     CART: 'cart',
     ADMIN: 'admin'
   };
-  const [currentPage, setCurrentPage] = useState(PAGES.HOME); 
+  const [currentPage, setCurrentPage] = useState(PAGES.CART); 
   //const [currentPage, setCurrentPage] = useState(PAGES.ADMIN);
   const [userType, setUserType] = useState(null); // 'admin' or 'customer'
 
@@ -109,6 +109,10 @@ function App() {
           PAGES={PAGES} 
         />
       )}
+      {currentPage === PAGES.CART && (
+      <ShoppingCart goToHomePage={() => setCurrentPage(PAGES.HOME)} />
+      )}
+
     </div>
   );
 }
