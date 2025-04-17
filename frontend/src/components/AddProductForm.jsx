@@ -18,7 +18,7 @@ const AddProductForm = ({ closeModal }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const response = await fetch('/api/products', {
+    const response = await fetch('http://localhost:5000/addproduct', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'

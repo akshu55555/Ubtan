@@ -16,7 +16,7 @@ const AddRawMaterialForm = ({ closeModal }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const response = await fetch("/api/raw_material", {
+    const response = await fetch("http://localhost:5000/rawmaterial", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
