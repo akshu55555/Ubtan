@@ -9,7 +9,7 @@ const payment = (sequelize) => {
     },
     cust_id: {
       type: DataTypes.INTEGER,
-      allowNull: false,
+      
       references: {
         model: 'customers',
         key: 'cust_id'
@@ -17,7 +17,7 @@ const payment = (sequelize) => {
     },
     net_price: {
       type: DataTypes.DECIMAL(10, 2),
-      allowNull: false
+      
     },
     dop: {
       type: DataTypes.DATE,

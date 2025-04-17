@@ -9,14 +9,14 @@ const supplier = (sequelize) => {
     },
     s_name: {
       type: DataTypes.STRING,
-      allowNull: false
+      
     },
     location: {
       type: DataTypes.STRING
     },
     s_contact: {
       type: DataTypes.STRING,
-      allowNull: false
+      
     }
   }, {
     timestamps: true,

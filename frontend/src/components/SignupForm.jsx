@@ -12,7 +12,7 @@ function SignupForm({ onBackClick, navigateToLogin }) {
       last_name: e.target.lastName.value,
       contact: e.target.contact.value,
       address: e.target.address.value,
-      user_type: userType,  // Add user type to the data
+      usertype: userType,  // Add user type to the data
     };
 
     fetch('http://localhost:5000/signup', {

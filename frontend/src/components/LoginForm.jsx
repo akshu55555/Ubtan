@@ -10,7 +10,7 @@ function LoginForm({ onBackClick, onLoginSuccess }) {
     const formData = {
       id: e.target.id.value,
       first_name: e.target.first_name.value,
-      user_type: userType,  // Add user type to the data
+      usertype: userType,  // Add user type to the data
     };
     
     fetch('http://localhost:5000/login', {

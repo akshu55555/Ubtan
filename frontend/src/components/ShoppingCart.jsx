@@ -75,14 +75,32 @@ const ShoppingCart = () => {
   };
 
   const handleCheckout = () => {
-    // Optional: Save payment details to backend here
     setShowPaymentSuccess(true);
   };
 
-  const handleClosePopup = () => {
+  const handleClosePopup = async () => {
+    const token = localStorage.getItem('token');
+
+    try {
+      // ✅ Send cart details to backend before clearing
+      await axios.post(
+        'http://localhost:5000/payment',
+        { },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        }
+      );
+      toast.success("Order saved successfully");
+    } catch (error) {
+      console.error("Error saving order:", error);
+      toast.error(error.response?.data?.message || "Failed to save order");
+    }
+
     setShowPaymentSuccess(false);
-    setCart([]); // Clear cart after successful payment
-    window.location.href = '/ProductSearch'; 
+    setCart([]); // Clear cart after saving
+    window.location.href = '/ProductSearch';
   };
 
   if (loading) {
