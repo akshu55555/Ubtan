@@ -38,12 +38,14 @@ const AdminDashboard = ({ goToPage, PAGES }) => {
       <div className="admin-dashboard-card">
         <h2>What would you like to do?</h2>
         <div className="admin-dashboard-buttons">
-          <button onClick={() => goToPage(PAGES.PRODUCTS)}>View Products</button>
-          <button onClick={() => alert("View Raw Materials page not implemented")}>View Raw Materials</button>
-          <button onClick={() => alert("View Suppliers page not implemented")}>View Suppliers</button>
+        <button onClick={() => goToPage(PAGES.ADMIN_PRODUCTS)}>View Products</button>
+        <button onClick={handleAddProductClick}>Add New Product</button> {/* Update this button */}
+        <button onClick={() => goToPage(PAGES.ADMIN_RAW_MATERIALS)}>View Raw Materials</button> 
+        <button onClick={handleAddRawMaterialClick}>Add New Raw Material</button>
+        <button onClick={() => goToPage(PAGES.ADMIN_SUPPLIERS)}>View Suppliers</button> {/* Added this button */}
           <button onClick={handleAddSupplierClick}>Add New Supplier</button>
-          <button onClick={handleAddProductClick}>Add New Product</button> {/* Update this button */}
-          <button onClick={handleAddRawMaterialClick}>Add New Raw Material</button>
+          
+          
         </div>
       </div>
 

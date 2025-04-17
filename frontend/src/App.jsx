@@ -8,6 +8,9 @@ import LoginForm from './components/LoginForm.jsx';
 import ProductSearch from './components/ProductSearch.jsx';
 import ShoppingCart from './components/ShoppingCart.jsx';
 import AdminDashboard from './components/AdminDashboard.jsx';
+import AdminProductView from './components/AdminProductView.jsx';
+import AdminRawMaterialView from './components/AdminRawMaterialView.jsx'; 
+import AdminSupplierView from './components/AdminSupplierView.jsx';
 import './App.css';
 
 function App() {
@@ -17,7 +20,10 @@ function App() {
     LOGIN: 'login',
     PRODUCTS: 'products',
     CART: 'cart',
-    ADMIN: 'admin'
+    ADMIN: 'admin',
+    ADMIN_PRODUCTS: 'admin-products',
+    ADMIN_RAW_MATERIALS: 'admin-raw-materials',
+    ADMIN_SUPPLIERS: 'admin-suppliers'  
   };
   const [currentPage, setCurrentPage] = useState(PAGES.CART); 
   //const [currentPage, setCurrentPage] = useState(PAGES.ADMIN);
@@ -112,6 +118,16 @@ function App() {
       {currentPage === PAGES.CART && (
       <ShoppingCart goToHomePage={() => setCurrentPage(PAGES.HOME)} />
       )}
+      {currentPage === PAGES.ADMIN_PRODUCTS && (
+      <AdminProductView goToPage={setCurrentPage} PAGES={PAGES} />
+      )}
+      {currentPage === PAGES.ADMIN_RAW_MATERIALS && (
+      <AdminRawMaterialView goToPage={setCurrentPage} PAGES={PAGES} />
+      )}
+      {currentPage === PAGES.ADMIN_SUPPLIERS && (  // Added this route for Suppliers
+      <AdminSupplierView goToPage={setCurrentPage} PAGES={PAGES} />
+      )}
+
 
     </div>
   );

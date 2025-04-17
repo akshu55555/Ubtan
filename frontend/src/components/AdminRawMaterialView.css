@@ -1,0 +1,68 @@
+.admin-rawmaterial-container {
+    padding: 2rem 1rem;
+    background: linear-gradient(to bottom, #f3f5e9, #e8f2df);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .material-list {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    align-items: center;
+    width: 100%;
+    max-width: 800px;
+  }
+  
+  .material-card {
+    width: 100%;
+    background: white;
+    border-radius: 14px;
+    box-shadow: 0px 6px 18px rgba(0, 0, 0, 0.1);
+    padding: 1.5rem;
+    font-size: 1.1rem;
+    color: #2c3e50;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+  }
+  
+  .material-name {
+    margin: 0;
+    font-weight: 600;
+  }
+  
+  /* Optional: Reuse existing styles */
+  .dashboard-title {
+    text-align: center;
+    font-size: 2.2rem;
+    margin-bottom: 2rem;
+    color: #2c3e50;
+  }
+  
+  .back-button {
+    padding: 0.6rem 1.5rem;
+    font-size: 1rem;
+    background-color: #6b8e4e;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-weight: 600;
+    text-align: center;
+    margin-top: 2rem;
+    align-self: center;
+    width: auto;
+    display: inline-block;
+  }
+  
+  .back-button:hover {
+    background-color: #5a7f3e;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(9, 216, 182, 0.3);
+  }
+  
+  
