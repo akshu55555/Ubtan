@@ -1,5 +1,5 @@
 import express from 'express';
-import jsonwebtoken from 'jsonwebtoken';
+
 import sequelize from './db.js';
 import signup from './controllers/signupcontroller.js';
 import login from './controllers/logincontroller.js';
@@ -9,10 +9,15 @@ import getcart from './controllers/getcartcontroller.js';
 import suggestions from './controllers/suggestionscontroller.js';
 import cookieParser from 'cookie-parser';
 import featured from './controllers/featuredcontroller.js';
+import rawmaterial from './controllers/rawmaterialcontroller.js';
+import supplier from './controllers/suppliercontroller.js';
+import payment from './controllers/paymentcontroller.js';
+import product from './controllers/addproductcontroller.js';
 import cors from 'cors';
 const app=express();
 const PORT=5000;
 import dotenv from 'dotenv';
+
 dotenv.config();
 app.use(cookieParser());
 app.use(express.json({strict:false}));
@@ -46,3 +51,7 @@ app.use('/cart',cart);
 app.use('/getcart',getcart);
 app.use('/suggestions',suggestions);
 app.use('/featured-products',featured);
+app.use('/rawmaterial',rawmaterial);
+app.use('/supplier',supplier);
+app.use('/payment',payment);
+app.use('/addproduct',product);
