@@ -7,19 +7,21 @@ import SignupForm from './components/SignupForm.jsx';
 import LoginForm from './components/LoginForm.jsx';
 import ProductSearch from './components/ProductSearch.jsx';
 import ShoppingCart from './components/ShoppingCart.jsx';
+import AdminDashboard from './components/AdminDashboard.jsx';
 import './App.css';
 
 function App() {
-  // Define page states
   const PAGES = {
     HOME: 'home',
     SIGNUP: 'signup',
     LOGIN: 'login',
     PRODUCTS: 'products',
-    CART: 'cart'
+    CART: 'cart',
+    ADMIN: 'admin'
   };
-  
-  const [currentPage, setCurrentPage] = useState(PAGES.HOME);
+  const [currentPage, setCurrentPage] = useState(PAGES.HOME); 
+  //const [currentPage, setCurrentPage] = useState(PAGES.ADMIN);
+  const [userType, setUserType] = useState(null); // 'admin' or 'customer'
 
   const handleSignupClick = (e) => {
     if (e) e.preventDefault();
@@ -44,15 +46,19 @@ function App() {
     setCurrentPage(PAGES.LOGIN);
   };
 
-  const handleLoginSuccess = () => {
-    setCurrentPage(PAGES.PRODUCTS);
+  const handleLoginSuccess = (userRole) => {
+    setUserType(userRole); // 'admin' or 'customer'
+    if (userRole === 'admin') {
+      setCurrentPage(PAGES.ADMIN);
+    } else {
+      setCurrentPage(PAGES.PRODUCTS);
+    }
   };
 
   const handleCartClick = () => {
     setCurrentPage(PAGES.CART);
   };
 
-  // Custom Navbar props to handle navigation
   const navbarProps = {
     onSignupClick: handleSignupClick,
     onLoginClick: handleLoginClick,
@@ -63,7 +69,7 @@ function App() {
   return (
     <div className="app">
       <Navbar {...navbarProps} />
-      
+
       {currentPage === PAGES.HOME && (
         <>
           <HeroSection />
@@ -95,6 +101,13 @@ function App() {
 
       {currentPage === PAGES.CART && (
         <ShoppingCart />
+      )}
+
+      {currentPage === PAGES.ADMIN && (
+        <AdminDashboard 
+          goToPage={setCurrentPage} 
+          PAGES={PAGES} 
+        />
       )}
     </div>
   );

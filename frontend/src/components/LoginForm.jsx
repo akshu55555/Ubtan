@@ -1,13 +1,16 @@
-import React from 'react';
-import './SignupForm.css'; // Reusing the same styles
+import React, { useState } from 'react';
+import './SignupForm.css';  // Reusing the same styles
 
 function LoginForm({ onBackClick, onLoginSuccess }) {
+  const [userType, setUserType] = useState('customer'); // Default to customer
+
   const handleSubmit = (e) => {
     e.preventDefault();
     
     const formData = {
       id: e.target.id.value,
-      first_name: e.target.first_name.value
+      first_name: e.target.first_name.value,
+      user_type: userType,  // Add user type to the data
     };
     
     fetch('http://localhost:5000/login', {
@@ -24,13 +27,13 @@ function LoginForm({ onBackClick, onLoginSuccess }) {
       throw new Error('Network response was not ok');
     })
     .then(data => {
-      // ✅ Store token in localStorage
+      // Store token in localStorage
       localStorage.setItem('token', data.token);
 
       alert('Login successful!');
       e.target.reset();
       // Call the onLoginSuccess function to navigate to the products page
-      onLoginSuccess();
+      onLoginSuccess(userType);
     })
     .catch(error => {
       console.error('Error:', error);
@@ -49,6 +52,18 @@ function LoginForm({ onBackClick, onLoginSuccess }) {
         <div className="form-field">
           <label htmlFor="name">Name</label>
           <input type="text" id="first_name" name="first_name" placeholder="Enter your name" required />
+        </div>
+        <div className="form-field">
+          <label htmlFor="userType">User Type</label>
+          <select
+            id="userType"
+            name="userType"
+            value={userType}
+            onChange={(e) => setUserType(e.target.value)}
+          >
+            <option value="customer">Customer</option>
+            <option value="admin">Admin</option>
+          </select>
         </div>
         <div className="form-buttons">
           <button type="button" className="back-btn" onClick={onBackClick}>Back</button>

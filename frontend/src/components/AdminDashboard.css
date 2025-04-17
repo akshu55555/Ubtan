@@ -1,0 +1,100 @@
+.admin-dashboard-container {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(to bottom, #f7f3e9, #d0e8c1);
+    padding: 2rem;
+  }
+  
+  .admin-dashboard-card {
+    background-color: #ffffff;
+    padding: 2.5rem 3rem;
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    max-width: 600px;
+    width: 100%;
+    text-align: center;
+    color: #2c3e2f;
+  }
+  
+  .admin-dashboard-card h2 {
+    font-size: 2rem;
+    margin-bottom: 2rem;
+    color: #3a4a3d;
+  }
+  
+  /* Button grid */
+  .admin-dashboard-buttons {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+  }
+  
+  /* Styled buttons */
+  .admin-dashboard-buttons button {
+    background-color: #6b8e4e;
+    color: white;
+    border: none;
+    padding: 12px;
+    font-size: 1rem;
+    border-radius: 10px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  
+  .admin-dashboard-buttons button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(107, 142, 78, 0.4);
+  }
+  
+  @media (max-width: 600px) {
+    .admin-dashboard-buttons {
+      grid-template-columns: 1fr;
+    }
+  
+    .admin-dashboard-card {
+      padding: 2rem;
+    }
+  }
+/* Modal overlay */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5); /* Dark background */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+  }
+  
+  /* Modal content */
+  .modal-content {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    width: 400px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    position: relative;
+  }
+  
+  /* Close button */
+  .close-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: none;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+    color: #333;
+  }
+  
+  .close-button:hover {
+    color: #09D8B6;  /* Accent color on hover */
+  }
+    

@@ -1,7 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './SignupForm.css';
 
 function SignupForm({ onBackClick, navigateToLogin }) {
+  const [userType, setUserType] = useState('customer'); // Default to customer
+
   const handleSubmit = (e) => {
     e.preventDefault();
     
@@ -9,7 +11,8 @@ function SignupForm({ onBackClick, navigateToLogin }) {
       first_name: e.target.firstName.value,
       last_name: e.target.lastName.value,
       contact: e.target.contact.value,
-      address: e.target.address.value
+      address: e.target.address.value,
+      user_type: userType,  // Add user type to the data
     };
 
     fetch('http://localhost:5000/signup', {
@@ -28,7 +31,6 @@ function SignupForm({ onBackClick, navigateToLogin }) {
     .then(data => {
       alert('Sign up successful!');
       e.target.reset();
-      // Navigate to login page after successful signup
       navigateToLogin();
     })
     .catch(error => {
@@ -56,6 +58,18 @@ function SignupForm({ onBackClick, navigateToLogin }) {
         <div className="form-field">
           <label htmlFor="address">Address</label>
           <input type="text" id="address" name="address" placeholder="Enter your address" required />
+        </div>
+        <div className="form-field">
+          <label htmlFor="userType">User Type</label>
+          <select
+            id="userType"
+            name="userType"
+            value={userType}
+            onChange={(e) => setUserType(e.target.value)}
+          >
+            <option value="customer">Customer</option>
+            <option value="admin">Admin</option>
+          </select>
         </div>
         <div className="form-buttons">
           <button type="button" className="back-btn" onClick={onBackClick}>Back</button>
