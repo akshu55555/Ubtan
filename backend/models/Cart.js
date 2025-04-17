@@ -10,7 +10,7 @@ const cart = (sequelize) => {
     },
     prod_id: {
       type: DataTypes.INTEGER,
-      allowNull: false,
+      
       references: {
         model: 'products', // name of the table
         key: 'prod_id'     // primary key in products table
@@ -18,7 +18,7 @@ const cart = (sequelize) => {
     },
     cust_id: {
       type: DataTypes.INTEGER,
-      allowNull: false,
+      
       references: {
         model: 'customers', // name of the table
         key: 'cust_id'      // primary key in customers table
