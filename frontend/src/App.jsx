@@ -105,9 +105,7 @@ function App() {
         />
       )}
 
-      {currentPage === PAGES.CART && (
-        <ShoppingCart />
-      )}
+     
 
       {currentPage === PAGES.ADMIN && (
         <AdminDashboard 

@@ -11,6 +11,7 @@ const ShoppingCart = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [showPaymentSuccess, setShowPaymentSuccess] = useState(false);
+  const [paymentDetails, setPaymentDetails] = useState(null);
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -21,6 +22,13 @@ const ShoppingCart = () => {
       setLoading(false);
     }
   }, []);
+
+  // For debugging - log the cart data structure
+  useEffect(() => {
+    if (cart.length > 0) {
+      console.log("Cart data received:", cart);
+    }
+  }, [cart]);
 
   const fetchCart = async (token) => {
     setLoading(true);
@@ -76,6 +84,14 @@ const ShoppingCart = () => {
 
   const handleCheckout = () => {
     setShowPaymentSuccess(true);
+    
+    // Calculate the total amount for display in the popup
+    const totalAmount = cart.reduce((sum, item) => 
+      sum + ((item.product?.p_price || 0) * (item.quant || 1)), 0);
+    
+    setPaymentDetails({
+      total: totalAmount.toFixed(2)
+    });
   };
 
   const handleClosePopup = async () => {
@@ -83,7 +99,7 @@ const ShoppingCart = () => {
 
     try {
       // ✅ Send cart details to backend before clearing
-      await axios.post(
+      const response = await axios.post(
         'http://localhost:5000/payment',
         { },
         {
@@ -92,6 +108,15 @@ const ShoppingCart = () => {
           }
         }
       );
+      
+      // Store the payment details from backend response
+      if (response.data && response.data.payment) {
+        setPaymentDetails({
+          ...paymentDetails,
+          net_price: response.data.payment.net_price
+        });
+      }
+      
       toast.success("Order saved successfully");
     } catch (error) {
       console.error("Error saving order:", error);
@@ -100,7 +125,7 @@ const ShoppingCart = () => {
 
     setShowPaymentSuccess(false);
     setCart([]); // Clear cart after saving
-    window.location.href = '/ProductSearch';
+    window.location.href = '/Home';
   };
 
   if (loading) {
@@ -127,44 +152,51 @@ const ShoppingCart = () => {
     );
   }
 
+  // Calculate the total for display in the cart
+  const cartTotal = cart.reduce((sum, item) => 
+    sum + ((item.product?.p_price || 0) * (item.quant || 1)), 0).toFixed(2);
+
   return (
     <div className="shopping-cart-page">
       <h2 className="cart-title">Shopping Cart</h2>
       <div className="cart-items-container">
         {cart.map((item) => (
-          <div key={item.cart_id || item.id} className="cart-item">
+          <div key={item.cart_id} className="cart-item">
             <div className="item-details">
               <div className="item-image-placeholder">Image</div>
               <div className="item-info">
-                <p className="item-name">{item.Product?.name || 'Unknown Product'}</p>
-                <p className="item-price">Price: ${item.Product?.p_price || 0}</p>
+                <p className="item-name">{item.product?.p_name || 'Unknown Product'}</p>
+                <p className="item-price">Price: ${item.product?.p_price || 0}</p>
               </div>
             </div>
             <div className="item-quantity">
-              <button onClick={() => updateQuantity(item.cart_id || item.id, (item.quant || item.quantity) - 1)}>-</button>
-              <span>Qty: {item.quant || item.quantity}</span>
-              <button onClick={() => updateQuantity(item.cart_id || item.id, (item.quant || item.quantity) + 1)}>+</button>
+              <button onClick={() => updateQuantity(item.cart_id, item.quant - 1)}>-</button>
+              <span>Qty: {item.quant}</span>
+              <button onClick={() => updateQuantity(item.cart_id, item.quant + 1)}>+</button>
             </div>
             <div className="item-actions">
               <p className="item-subtotal">
-                Subtotal: ${(item.Product?.p_price * (item.quant || item.quantity || 1)).toFixed(2)}
+                Subtotal: ${((item.product?.p_price || 0) * (item.quant || 1)).toFixed(2)}
               </p>
-              <button className="remove-button" onClick={() => removeFromCart(item.cart_id || item.id)}>Remove</button>
+              <button className="remove-button" onClick={() => removeFromCart(item.cart_id)}>Remove</button>
             </div>
           </div>
         ))}
       </div>
       <div className="cart-summary">
-        <p className="cart-total">Total: ${cart.reduce((sum, item) => sum + (item.Product?.p_price * (item.quant || item.quantity)), 0).toFixed(2) || 0}</p>
+        <p className="cart-total">
+          Total: ${cartTotal}
+        </p>
         <button className="checkout-button" onClick={handleCheckout}>Proceed to Checkout</button>
       </div>
 
-      {/* ✅ Payment Success Popup */}
+      {/* ✅ Payment Success Popup with Net Purchase */}
       {showPaymentSuccess && (
         <div className="payment-popup-overlay">
           <div className="payment-popup">
             <FaCheckCircle className="payment-success-icon" />
             <h3>Payment Done Successfully</h3>
+            <p className="payment-total">Your Net Purchase: ${paymentDetails?.total || cartTotal}</p>
             <button className="done-button" onClick={handleClosePopup}>Done</button>
           </div>
         </div>

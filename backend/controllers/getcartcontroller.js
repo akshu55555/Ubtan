@@ -16,7 +16,7 @@ const getcart=async(req,res)=>{
     try{
         const cartdetails = await CartModel.findAll({
             
-            where: { cust_id },
+            where: { cust_id:cust_id },
             include: [
                 {
                     model: ProductModel,
@@ -26,7 +26,7 @@ const getcart=async(req,res)=>{
         });
 
         console.log("cart details",cartdetails);
-        console.log("only product",cartdetails.p_name);
+       
         return res.status(200).json(cartdetails);
     }catch(err){
         console.log("error");

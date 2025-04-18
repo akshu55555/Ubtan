@@ -1,5 +1,7 @@
+
 import { PaymentModel } from "../db.js";
 import { CartModel } from "../db.js";
+import { ProductModel } from "../db.js";
 import jwt from 'jsonwebtoken';
 
 const payment = async (req, res) => {
@@ -20,25 +22,32 @@ const payment = async (req, res) => {
     console.log("id", cust_id);
 
     // Find the cart details
-    const cartdetails = await CartModel.findOne({
-      attributes: ['cust_id', 'doo', 'net_price'],
-      where: { cust_id: cust_id }
+    const cartItems = await CartModel.findAll({
+      where: { cust_id },
+      include: [{
+        model: ProductModel,
+        attributes: ['p_name', 'p_price']
+      }]
     });
-
-    if (!cartdetails) {
+  
+  if (!cartItems || cartItems.length === 0) {
       return res.status(404).json({ message: 'Cart not found for this customer' });
-    }
-
-    // Convert net_price to number if it's a string
-    const net_price = parseFloat(cartdetails.net_price) || 0;
-    const dop = new Date(); // Use current date as payment date
-
-    // Create payment record
-    const pay = await PaymentModel.create({
+  }
+  
+  // Calculate total amount from cart items
+  let totalAmount = cartItems.reduce((sum, item) => {
+      return sum + (parseFloat(item.net_price) || 0);
+  }, 0);
+  
+  const dop = new Date();
+  
+  // Create payment record
+  const pay = await PaymentModel.create({
       cust_id,
-      net_price,
+      net_price: totalAmount,
       dop
-    });
+  });
+  
 
     console.log("payment added!", pay);
     return res.status(200).json({ message: "payment added!", payment: pay });

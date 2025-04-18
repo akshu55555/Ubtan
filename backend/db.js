@@ -37,7 +37,7 @@ SupplierModel.belongsToMany(RawMaterialModel, {
 CustomerModel.hasMany(PaymentModel, { foreignKey: 'cust_id' });
 PaymentModel.belongsTo(CustomerModel, { foreignKey: 'cust_id' });
 
-
+// In your db.js or where you define your models
 CartModel.belongsTo(ProductModel, { foreignKey: 'prod_id' });
 ProductModel.hasMany(CartModel, { foreignKey: 'prod_id' });
 // Sync models with database
