@@ -12,7 +12,7 @@ const AdminRawMaterialView = ({ goToPage, PAGES }) => {
 
   const fetchMaterials = async () => {
     try {
-      const response = await axios.get('http://localhost:5000/rawmaterials');
+      const response = await axios.get('http://localhost:5000/viewmaterial');
       setMaterials(response.data);
       setLoading(false);
     } catch (error) {
@@ -30,8 +30,8 @@ const AdminRawMaterialView = ({ goToPage, PAGES }) => {
       ) : (
         <div className="material-list">
           {materials.map((material) => (
-            <div className="material-card" key={material.rm_id}>
-              <p className="material-name">{material.rm_name}</p>
+            <div className="material-card" key={material.material_id}>
+              <p className="material-name">{material.m_name}</p>
             </div>
           ))}
         </div>

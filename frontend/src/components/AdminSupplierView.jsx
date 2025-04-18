@@ -12,7 +12,7 @@ const AdminSupplierView = ({ goToPage, PAGES }) => {
 
   const fetchSuppliers = async () => {
     try {
-      const response = await axios.get('http://localhost:5000/suppliers');
+      const response = await axios.get('http://localhost:5000/viewsupplier');
       setSuppliers(response.data);
       setLoading(false);
     } catch (error) {
@@ -33,7 +33,7 @@ const AdminSupplierView = ({ goToPage, PAGES }) => {
             <div className="supplier-card" key={supplier.supplier_id}>
               <h3>{supplier.s_name}</h3>
               <p><strong>Location:</strong> {supplier.location}</p>
-              <p><strong>Contact:</strong> {supplier.contact}</p>
+              <p><strong>Contact:</strong> {supplier.s_contact}</p>
             </div>
           ))}
         </div>

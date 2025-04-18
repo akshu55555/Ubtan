@@ -17,6 +17,9 @@ import cors from 'cors';
 const app=express();
 const PORT=5000;
 import dotenv from 'dotenv';
+import viewproducts from './controllers/viewproductscontroller.js';
+import viewsuppliers from './controllers/viewsupplierscontroller.js';
+import viewmaterials from './controllers/viewmaterialcontroller.js';
 
 dotenv.config();
 app.use(cookieParser());
@@ -55,3 +58,6 @@ app.use('/rawmaterial',rawmaterial);
 app.use('/supplier',supplier);
 app.use('/payment',payment);
 app.use('/addproduct',product);
+app.use('/viewproduct',viewproducts);
+app.use('/viewsupplier',viewsuppliers);
+app.use('/viewmaterial',viewmaterials);
