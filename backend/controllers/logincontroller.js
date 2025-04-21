@@ -23,7 +23,7 @@ const login=async(req,res) =>{
                     "your_secret_key",
                     {expiresIn:'1h'}
                 )
-                res.cookie("token", token, { httpOnly: true, secure: true, sameSite: "Strict" });
+               // res.cookie("token", token, { httpOnly: true, secure: true, sameSite: "Strict" });
                 console.log("login successful");
                 res.json({ message: "Login successful", token: token });
     

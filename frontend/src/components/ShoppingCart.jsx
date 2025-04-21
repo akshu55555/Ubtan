@@ -176,7 +176,7 @@ const ShoppingCart = () => {
             </div>
             <div className="item-actions">
               <p className="item-subtotal">
-                Subtotal: ${((item.product?.p_price || 0) * (item.quant || 1)).toFixed(2)}
+                Price: ${((item.product?.p_price || 0) * (item.quant || 1)).toFixed(2)}
               </p>
               <button className="remove-button" onClick={() => removeFromCart(item.cart_id)}>Remove</button>
             </div>
