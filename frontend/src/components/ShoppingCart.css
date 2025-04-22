@@ -9,11 +9,35 @@
   background-color: #f4f4f4; /* Light background for the page */
 }
 
+/* New cart header styles for the back button */
+.cart-header {
+  width: 80%;
+  max-width: 900px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+}
+
+.back-to-products-btn {
+  background-color: #3498db;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+}
+
+.back-to-products-btn:hover {
+  background-color: #2980b9;
+}
+
 .cart-title {
   font-size: 2.5em;
-  margin-bottom: 30px;
   color: #333;
-  text-align: center;
+  margin: 0; /* Remove default margin for proper alignment */
 }
 
 .cart-items-container {

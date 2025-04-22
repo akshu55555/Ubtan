@@ -48,6 +48,10 @@ const payment = async (req, res) => {
       dop
   });
   
+  //delete cart items for that customer
+  await CartModel.destroy({
+    where: { cust_id }
+  });
 
     console.log("payment added!", pay);
     return res.status(200).json({ message: "payment added!", payment: pay });

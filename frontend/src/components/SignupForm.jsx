@@ -29,7 +29,8 @@ function SignupForm({ onBackClick, navigateToLogin }) {
       throw new Error('Network response was not ok');
     })
     .then(data => {
-      alert('Sign up successful!');
+      // Just show the message from backend in the alert which contains the ID
+      alert(data.message);
       e.target.reset();
       navigateToLogin();
     })
